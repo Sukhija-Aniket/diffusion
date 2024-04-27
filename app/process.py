@@ -4,16 +4,18 @@ import sqlite3
 from dotenv import load_dotenv
 from PIL import Image
 import torchvision.transforms.functional as TF
-
+import torch
 import time
-from modelCode.model import UNet
-from utils import testImage, save_mask
-from modelCode.loadModel import model
+from modelCode.loadModel import diffusion_alpha, diffusion_animals
+from torchvision.utils import save_image
 from database import DBSCHEMA
 
 load_dotenv()
 
 
+
+animals = []
+numbers = []
 
 PATHBASE = os.path.abspath(os.path.dirname(__file__))
 def process(*file): #TODO: make changes to this function to work with diffusion model. 
@@ -21,16 +23,19 @@ def process(*file): #TODO: make changes to this function to work with diffusion 
     dbconn = sqlite3.connect(os.path.join(PATHBASE, os.getenv('DATABASE_PATH')))
     dbcurs = dbconn.cursor()
 
-    time.sleep(5)
     # TODO: model working to be added here
-    # input_file_path = file[2]
-    output_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), f'static/generated/{file[0]}.png')
-    print(output_file_path)
-    # image = Image.open(input_file_path)
-    # tensor = testImage(model, image)
-    # mask = TF.to_pil_image(tensor)
-    # save_mask(mask, output_file_path)
-    # time.sleep(1) 
+    modelClass = file[1]
+    label = file[2]
+    num_images = 1
+    if modelClass == 'numbers':
+        y = torch.Tensor([numbers[int(label)]] * num_images).long()
+        generated_img = diffusion_alpha.sample(True, y).float()
+    elif modelClass == 'animals':
+        y = torch.Tensor(animals[int(label)] * num_images).long()
+        generated_img = diffusion_animals.sample(True, y).float()
+    output_file_path = f'static/generated/{file[0]}.png'
+    generated_img = generated_img[0]
+    save_image(generated_img, output_file_path)
     # TODO: model working to be added here
     
     dbcurs.execute(f"""UPDATE user SET processed_path="{output_file_path}" WHERE user_uuid="{file[0]}"; """)
