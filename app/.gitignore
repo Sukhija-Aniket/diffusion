@@ -1,0 +1,6 @@
+.env
+instance/*
+static/uploads
+static/converted
+static/tmp
+models/

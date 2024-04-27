@@ -1,0 +1,46 @@
+{% extends 'base.html' %} {% block head_additions %}
+<script type="application/javascript" src="/static/upload.js" defer></script>
+{% endblock %} {% block content %}
+
+<div class="modal fade" id="numbersModal" tabindex="-1" aria-labelledby="carouselModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="carouselModalLabel">Button Carousel</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Carousel -->
+                <div id="buttonCarousel" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <div class="container">
+                                <!-- Generate rows of buttons -->
+                                <!-- First 20 Buttons -->
+                                ${generateButtonRows(1, 20)}
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="container">
+                                <!-- Next 20 Buttons -->
+                                ${generateButtonRows(21, 40)}
+                            </div>
+                        </div>
+                    </div>
+                    <a class="carousel-control-prev" href="#buttonCarousel" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#buttonCarousel" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
